@@ -78,34 +78,23 @@
         static string GetPath()
         {
             string path = "<..>";
-            //do
-            //{
-                Console.Write("Укажите директорию, где будет созданы тестовые каталоги и файлы: ");
 
-                
-            //else
-            //{
-            //    break;
-            //}
-            //}
-            //while (true);
-
+            Console.Write("Укажите директорию: ");
             //try
             //{
+            path = Path.GetFullPath(Console.ReadLine()); 
 
-                path = Path.GetFullPath(Console.ReadLine()); 
-
-                if (path == "" || !new DirectoryInfo(path).Exists)
-                {
-                    Console.WriteLine("Несуществующий путь к каталогу");
-                    path = "<..>";
+            if (path == "" || !new DirectoryInfo(path).Exists)
+            {
+                Console.WriteLine("Несуществующий путь к каталогу");
+                path = "<..>";
                     //continue;
-                }
-                else
-                {
-                    //DirectoryInfo dirInfo = new DirectoryInfo(path);
-                    Console.WriteLine($"Директория найдена: {new DirectoryInfo(path).FullName}");
-                }
+            }
+            else
+            {
+                //DirectoryInfo dirInfo = new DirectoryInfo(path);
+                Console.WriteLine($"Директория найдена: {new DirectoryInfo(path).FullName}");
+            }
                
             //}
             //catch(DirectoryNotFoundException ex)
@@ -128,7 +117,6 @@
 
         static void CleanDirectory(DirectoryInfo directory)
         {
-            //DirectoryInfo di = new DirectoryInfo(path);
             DirectoryInfo[] di = directory.GetDirectories();
             FileInfo[] fi = directory.GetFiles();
             
@@ -162,7 +150,7 @@
                 }
             }
 
-            // После завершения рекурсии происходит проверка всех подпапок в указанной папке
+            // После завершения рекурсии происходит проверка всех подпапок
 
             foreach(var subfolder in di)
             {
@@ -189,7 +177,6 @@
 
         static void ShowLastAccessTime(DirectoryInfo directory)
         {
-           
             var folders = directory.GetDirectories();
             var files = directory.GetFiles();
             foreach (var file in files)
