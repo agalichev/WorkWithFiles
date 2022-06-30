@@ -13,7 +13,7 @@
                 Console.WriteLine($"{path}\n");
                 Console.ResetColor();
                 Console.WriteLine("Выберете действие:\n <1> Указать директорию\n <2> Удалить папки и файлы, неиспользуемые более 30 минут, в указанной директории\n <3> Показать все файлы и подпапки и их время доступа в указанной директории\n <4> Выйти из приложения ");
-                
+
                 var key = Console.ReadKey(true);
 
                 switch (key.Key)
@@ -57,7 +57,21 @@
                         Console.WriteLine();
 
                         DirectoryInfo di = new DirectoryInfo(path);
-                        ShowLastAccessTime(di);
+                        if (di.Exists)
+                        {
+                            if (di.GetDirectories().Length != 0)
+                            {
+                                ShowLastAccessTime(di);
+                            }
+                            else if (di.GetDirectories().Length == 0 && di.GetFiles().Length == 0)
+                            {
+                                Console.WriteLine("Папка пуста");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Директории {di.FullName} не существует");
+                        }
                         Console.WriteLine();
                         Console.WriteLine("Нажмите любую клавишу для продолжения");
                         Console.ReadKey(true);
@@ -73,7 +87,7 @@
                 }
                 break;
             }
-            while(true);
+            while (true);
         }
 
         static string GetPath()
@@ -84,11 +98,11 @@
             try
             {
                 path = Path.GetFullPath(Console.ReadLine());
-            
+
                 if (path == "" || !new DirectoryInfo(path).Exists)
                 {
-                   Console.WriteLine($"Директории {path} не существует");
-                   path = "<..>";
+                    Console.WriteLine($"Директории {path} не существует");
+                    path = "<..>";
                     //continue;
                 }
                 else
@@ -143,7 +157,7 @@
                 }
 
                 // Поиск файлов
-                    foreach (FileInfo f in fi)
+                foreach (FileInfo f in fi)
                 {
                     try
                     {
@@ -169,7 +183,7 @@
                     {
                         Console.WriteLine($"Ошибка: {ex.Message}");
                     }
-                }   
+                }
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -202,7 +216,7 @@
                     ShowLastAccessTime(folder);
                 }
             }
-            catch(DirectoryNotFoundException ex)
+            catch (DirectoryNotFoundException ex)
             {
                 Console.WriteLine($"Директория не существует. Ошибка: {ex.Message}");
             }
