@@ -30,15 +30,31 @@
                         Console.WriteLine();
 
                         DirectoryInfo diA = new DirectoryInfo(path);
+                        //if (diA.Exists)
+                        //{
+                        //    if (diA.GetDirectories().Length != 0)
+                        //    {
+                        //        CleanDirectory(diA);
+                        //    }
+                        //    else if (diA.GetDirectories().Length == 0 && diA.GetFiles().Length == 0)
+                        //    {
+                        //        Console.WriteLine("Папка пуста");
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    Console.WriteLine($"Директории {diA.FullName} не существует");
+                        //}
                         if (diA.Exists)
                         {
-                            if (diA.GetDirectories().Length != 0)
-                            {
-                                CleanDirectory(diA);
-                            }
-                            else if (diA.GetDirectories().Length == 0 && diA.GetFiles().Length == 0)
+                            if (diA.GetDirectories().Length == 0 && diA.GetFiles().Length == 0)
                             {
                                 Console.WriteLine("Папка пуста");
+                                //folderSize = GetFolderSize(diA);
+                            }
+                            else
+                            {
+                                CleanFolder(diA);
                             }
                         }
                         else
@@ -53,19 +69,35 @@
                     case ConsoleKey.D3: // Время доступа всех файлов и папок в указанной директории, в том числе и подпапок
 
                         Console.WriteLine();
-                        Console.WriteLine("Подкаталоги указанной директории:");
+                        Console.WriteLine("Иерархия целевой папки:");
                         Console.WriteLine();
 
                         DirectoryInfo di = new DirectoryInfo(path);
+                        //if (di.Exists)
+                        //{
+                        //    if (di.GetDirectories().Length != 0)
+                        //    {
+                        //        ShowLastAccessTime(di);
+                        //    }
+                        //    else if (di.GetDirectories().Length == 0 && di.GetFiles().Length == 0)
+                        //    {
+                        //        Console.WriteLine("Папка пуста");
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    Console.WriteLine($"Директории {di.FullName} не существует");
+                        //}
                         if (di.Exists)
                         {
-                            if (di.GetDirectories().Length != 0)
-                            {
-                                ShowLastAccessTime(di);
-                            }
-                            else if (di.GetDirectories().Length == 0 && di.GetFiles().Length == 0)
+                            if (di.GetDirectories().Length == 0 && di.GetFiles().Length == 0)
                             {
                                 Console.WriteLine("Папка пуста");
+                            }
+                            else
+                            {
+
+                                ShowLastAccessTime(di);
                             }
                         }
                         else
@@ -119,7 +151,7 @@
             return path;
         }
 
-        static void CleanDirectory(DirectoryInfo directory)
+        static void CleanFolder(DirectoryInfo directory)
         {
             try
             {
@@ -139,7 +171,7 @@
                         else
                         {
                             Console.WriteLine($"Папка {subfolder.Name} ещё используется!\n");
-                            CleanDirectory(subfolder);
+                            CleanFolder(subfolder);
                         }
                     }
                     catch (DirectoryNotFoundException ex)
