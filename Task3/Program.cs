@@ -149,6 +149,7 @@
                             long subFolderSize = GetFolderSize(subfolder); // Получаем размер удаляемой подпапки
                             Console.WriteLine($"Удаление папки {subfolder.Name} размером {subFolderSize} байт!");
                             temp += GetFilesCount(subfolder); // Определяем количество удаляемых файлов в указанной директории 
+                            SetFileAttributes(subfolder);
                             subfolder.Delete(true);
                             Console.WriteLine("Удаление завершено!\n");
                             freedSpace += subFolderSize;
@@ -415,7 +416,38 @@
             }
             return count;
         }
-    
 
+        // Метод для условия: при удалении каталога не должно возникнуть проблем (так я это понимаю)
+        static void SetFileAttributes(DirectoryInfo directory)
+        {
+            try
+            {
+                var folders = directory.GetDirectories();
+                var files = directory.GetFiles();
+                foreach (var file in files)
+                {
+                    var filePath = file.FullName;
+                    FileAttributes attributes = File.GetAttributes(filePath);
+                    if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                    {
+                        Console.WriteLine($"Установка атрибутов по умолчанию файлу {file.Name}");
+                        File.SetAttributes(filePath, FileAttributes.Normal);
+                    }
+                }
+                Console.WriteLine();
+                foreach (var folder in folders)
+                {
+                    SetFileAttributes(folder);
+                }
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                Console.WriteLine($"Директория не существует. Ошибка: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+        }
     }
 }
