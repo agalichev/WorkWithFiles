@@ -162,7 +162,7 @@
                 {
                     try
                     {
-                        if (DateTime.Now.Subtract(subfolder.LastAccessTime) > TimeSpan.FromMinutes(1))
+                        if (DateTime.Now.Subtract(subfolder.LastAccessTime) > TimeSpan.FromMinutes(30))
                         {
                             Console.WriteLine($"Удаление папки {subfolder.Name}!\n");
                             SetFileAttributes(subfolder);
