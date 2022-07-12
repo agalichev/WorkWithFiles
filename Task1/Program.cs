@@ -162,9 +162,10 @@
                 {
                     try
                     {
-                        if (DateTime.Now.Subtract(subfolder.LastAccessTime) > TimeSpan.FromMinutes(30))
+                        if (DateTime.Now.Subtract(subfolder.LastAccessTime) > TimeSpan.FromMinutes(1))
                         {
                             Console.WriteLine($"Удаление папки {subfolder.Name}!\n");
+                            SetFileAttributes(subfolder);
                             subfolder.Delete(true);
                             continue;
                         }
@@ -241,11 +242,40 @@
                 foreach (var folder in folders)
                 {
                     Console.WriteLine($"{folder.Name}: {folder.LastAccessTime}");
-                    //DirectoryInfo[] subfolders = folder.GetDirectories();
-                    //Console.WriteLine(subfolders.Length);
-                    //FileInfo[] fileInfo = folder.GetFiles();
-                    //Console.WriteLine(fileInfo.Length);
                     ShowLastAccessTime(folder);
+                }
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                Console.WriteLine($"Директория не существует. Ошибка: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+        }
+
+        // Метод для условия: при удалении каталога не должно возникнуть проблем (так я это понимаю)
+        static void SetFileAttributes(DirectoryInfo directory)
+        {
+            try
+            {
+                var folders = directory.GetDirectories();
+                var files = directory.GetFiles();
+                foreach (var file in files)
+                {
+                    var filePath = file.FullName;
+                    FileAttributes attributes = File.GetAttributes(filePath);
+                    if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                    {
+                        Console.WriteLine($"Установка атрибутов по умолчанию файлу {file.Name}");
+                        File.SetAttributes(filePath, FileAttributes.Normal);
+                    }               
+                }
+                Console.WriteLine();
+                foreach (var folder in folders)
+                {
+                    SetFileAttributes(folder);
                 }
             }
             catch (DirectoryNotFoundException ex)
